@@ -1,6 +1,4 @@
 // Function - Solve all the labs from PortSwigger's Academy Path Traversal module
-// Author - Ray
-// Caution - Use this code to learn and not against other peoples websites
 package main
 
 import (
@@ -86,12 +84,15 @@ func solveLab(m map[string]string) string {
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+	}
 	if resp.StatusCode != 200 {
 		if TRIES > MAX_TRIES {
-			return fmt.Sprintf("tried %d times and failed", tries)
+			return fmt.Sprintf("tried %d times and failed", TRIES)
 		}
 		TRIES++
-		m["payload"] = encodeWithDepth(m["payload"], tries)
+		m["payload"] = encodeWithDepth(m["payload"], TRIES)
 		return solveLab(m)
 	}
 	return string(body)
